@@ -4,10 +4,26 @@ const App = () => {
 
     // 상태, 함수, 상수, 변수를 선언하는 곳
 
-    const [name, setName] = useState(0)
+    const [name, setName] = useState([])
 
     const changeName = () => {
-        setName(7)
+        setName([
+            {
+                name : "shineunji",
+                age : 24,
+                address : "강서구",
+            },
+            {
+                name : "teddy",
+                age : 24,
+                address : "노원구",
+            },
+            {
+                name : "rose",
+                age : 27,
+                address : "호주",
+            }
+        ])
     }
 
     // 화면에 보여지는 곳 -> html을 기반으로 만들어짐
@@ -15,7 +31,14 @@ const App = () => {
     return (
         <div>
             <h1>hello world</h1>
-            <h1>{name}</h1>
+            {/*<h1>{name.name}</h1>*/}
+            {/*<h1>{name.age}</h1>*/}
+            {name && name.map(u => (
+                <div>
+                    <h1>{u.name}</h1>
+                    <h1>{u.age}</h1>
+                </div>
+            ))}
             <button onClick={() => changeName()}>
                 이름넣기
             </button>
