@@ -1,56 +1,49 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import axios from "axios";
 
 const App = () => {
 
-    // 상태, 함수, 상수, 변수를 선언하는 곳
+    const [movies, setMovies] = useState([])
 
-    const [name, setName] = useState([])
 
-    const changeName = () => {
-        setName([
-            {
-                name : "shineunji",
-                age : 24,
-                address : "강서구",
-            },
-            {
-                name : "teddy",
-                age : 24,
-                address : "노원구",
-            },
-            {
-                name : "rose",
-                age : 27,
-                address : "호주",
-            }
-        ])
+    //무비정보를 가져오는 상태 선언
+    const getMovies = async () => {
+        try {
+            const options = {
+                headers: {
+                    accept: 'application/json',
+                    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4NGE3NTdhMWVlYzIzYjZiMjNhNmMzMzQwYjdmNjgyNCIsInN1YiI6IjY0YjM3NzEwMGU0ZmM4MDBjNjgzYzg4YyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Aknbgw7OXsHEm-k7z_Ia6Y_YDKYlCBHIu7eYOGIhWu0'
+                }
+            };
+
+
+            const result = await axios.get("https://api.themoviedb.org/3/movie/now_playing", options)
+            console.log("+++++++++++++++++++", result.data.results)
+            setMovies(result.data.results)
+        } catch (err){
+            console.log(err.message)
+        }
     }
 
-    // 화면에 보여지는 곳 -> html을 기반으로 만들어짐
+    //앱이 실행될 때 무조건 실행되는 함수(hook)
+    useEffect(() => {
+        getMovies()
+    }, [])
 
     return (
         <div>
-            <h1>hello world</h1>
-            {/*<h1>{name.name}</h1>*/}
-            {/*<h1>{name.age}</h1>*/}
-            {name && name.map(u => (
+            <h1>API 가져오기</h1>
+            <h1>{movies.length}</h1>
+            {movies && movies.map(movie => (
                 <div>
-                    <h1>{u.name}</h1>
-                    <h1>{u.age}</h1>
+                    <h1>{movie.title}</h1>
+                    <h3>{movie.overview}</h3>
+                    <h2>{movie.release_date}</h2>
                 </div>
             ))}
-            <button onClick={() => changeName()}>
-                이름넣기
-            </button>
+            {/*<button onClick={() => getMovies()}>버튼</button>*/}
         </div>
     );
 };
 
 export default App;
-
-// 코드빌드순서
-// 1. 위에서 아래로
-// 2. '='를 기준으로 우측으로 좌측으로 치환
-// 3. .은 하위 메소드를 호출할 때 사용
-// 4. ,는 그리고로 해석
-// 5. js에서 ()는 함수들의 모음 button에서 ()는 클릭했다는 의미
